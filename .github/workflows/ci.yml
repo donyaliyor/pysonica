@@ -79,7 +79,6 @@ jobs:
     env:
       DATABASE_URL: "postgresql+asyncpg://postgres:postgres@localhost:5432/app_test"
       ENVIRONMENT: "local"
-      LOG_LEVEL: "WARNING"
 
     steps:
       - uses: actions/checkout@v4
