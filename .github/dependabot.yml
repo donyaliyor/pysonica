@@ -1,0 +1,48 @@
+# =============================================================================
+# Dependabot — automated dependency updates
+#
+# Quality matrix: HOURS feedback loop (dependency freshness)
+# =============================================================================
+
+version: 2
+
+updates:
+  # Python dependencies (pip ecosystem via uv)
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "deps"
+    # Group minor/patch updates into a single PR to reduce noise
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    reviewers: []  # Add your team handles
+    labels:
+      - dependencies
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "ci"
+    labels:
+      - ci
+
+  # Docker base images
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "docker"
+    labels:
+      - docker

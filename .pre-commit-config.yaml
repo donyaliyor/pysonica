@@ -1,0 +1,71 @@
+# =============================================================================
+# Pre-commit hooks — SECONDS feedback loop
+#
+# Install:  uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
+# Run all:  uv run pre-commit run --all-files
+# Update:   uv run pre-commit autoupdate
+# =============================================================================
+
+repos:
+  # -- Formatting + linting (ruff) ---------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.1
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  # -- Type checking (pyright — fast, pre-commit; mypy in CI) ------------------
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.408
+    hooks:
+      - id: pyright
+        additional_dependencies:
+          - fastapi
+          - uvicorn
+          - sqlalchemy
+          - asyncpg
+          - alembic
+          - pydantic
+          - pydantic-settings
+          - structlog
+          - asgi-correlation-id
+          - tenacity
+          - typer
+          - python-dotenv
+          - httpx
+
+  # -- Secret detection --------------------------------------------------------
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: [--baseline, .secrets.baseline]
+        exclude: (uv\.lock|\.secrets\.baseline)$
+
+  # -- Commit message format (conventional commits) ----------------------------
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.1.1
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  # -- Migration SQL safety (squawk) -------------------------------------------
+  - repo: https://github.com/sbdchd/squawk
+    rev: v1.5.4
+    hooks:
+      - id: squawk
+        files: ^migrations/versions/.*\.py$
+
+  # -- General file hygiene ----------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+      - id: debug-statements

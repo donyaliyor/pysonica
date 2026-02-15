@@ -1,0 +1,27 @@
+# =============================================================================
+# CODEOWNERS — review routing
+#
+# Each line: file pattern → GitHub username(s) or team(s)
+# Matched top-to-bottom, last match wins.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+# =============================================================================
+
+# Default — all changes require review from the team
+# * @your-org/your-team
+
+# Infrastructure modules — platform team owns these
+# src/app/config/     @your-org/platform
+# src/app/database/   @your-org/platform
+# src/app/logging/    @your-org/platform
+# src/app/errors/     @your-org/platform
+# src/app/health/     @your-org/platform
+# src/app/security/   @your-org/platform
+# src/app/resilience/ @your-org/platform
+
+# CI/CD
+# .github/            @your-org/platform
+# Dockerfile          @your-org/platform
+# docker-compose.yml  @your-org/platform
+
+# Migrations — require DBA or senior review
+# migrations/         @your-org/dba

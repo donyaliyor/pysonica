@@ -1,0 +1,49 @@
+# =============================================================================
+# Docker Compose — local development and CI
+#
+# Usage:
+#   docker compose up -d postgres    # DB only (for local dev with uv run)
+#   docker compose up --build        # Full stack
+#   docker compose down -v           # Tear down + delete volumes
+# =============================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # Override DATABASE_URL to use the compose service name as host.
+      DATABASE_URL: "postgresql+asyncpg://postgres:postgres@postgres:5432/app"
+      ENVIRONMENT: "local"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # K8s note: in production, set preStop: sleep 10 to handle the SIGTERM
+    # race condition where endpoints update lags behind pod termination.
+    # Don't implement in compose — it just slows down local dev.
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # -U: user, -d: database. Checks the specific DB exists and accepts connections.
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  pgdata:

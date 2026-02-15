@@ -1,0 +1,60 @@
+# =============================================================================
+# .dockerignore — keep the build context small and clean
+#
+# Critical: .venv MUST be excluded or uv sync inside the container will
+# conflict with the local virtual environment.
+# =============================================================================
+
+# Virtual environments
+.venv/
+venv/
+
+# Version control
+.git/
+.github/
+.gitignore
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Testing & coverage
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Type checkers & linters
+.mypy_cache/
+.pyright/
+.ruff_cache/
+.import_linter_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files (secrets — never bake into image)
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker (avoid recursive context)
+docker-compose.yml
+docker-compose.*.yml
+
+# Documentation (not needed at runtime)
+docs/
+CONTRIBUTING.md
+CHANGELOG.md
+LICENSE
