@@ -22,7 +22,7 @@
 # ---------------------------------------------------------------------------
 # Stage 1: Builder — install dependencies with uv
 # ---------------------------------------------------------------------------
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 
 # Pin uv version for reproducible builds. Update via dependabot.
 COPY --from=ghcr.io/astral-sh/uv:0.6.14 /uv /uvx /bin/
@@ -56,7 +56,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # ---------------------------------------------------------------------------
 # Stage 2: Runtime — minimal image with .venv + migrations only
 # ---------------------------------------------------------------------------
-FROM python:3.12-slim AS runtime
+FROM python:3.14-slim AS runtime
 
 # Build-time metadata — set via: docker build --build-arg BUILD_VERSION=1.2.3
 ARG BUILD_VERSION=0.1.0
